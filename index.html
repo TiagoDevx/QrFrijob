@@ -1,4 +1,3 @@
-3
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -71,6 +70,14 @@ function detectQRCode() {
       if (qrCode) {
         console.log("QR Code detectado:", qrCode.data);
         resultText.textContent = `Código: ${qrCode.data}`;
+
+        // Verifica se o QR Code contém um link válido
+        if (qrCode.data.startsWith("http://") || qrCode.data.startsWith("https://")) {
+          window.location.href = qrCode.data; // Redireciona para o link
+        } else {
+          resultText.textContent = "QR Code inválido ou não é um link.";
+        }
+
         stopCamera(); // Para a câmera após a leitura
         return;
       }
