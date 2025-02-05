@@ -10,16 +10,32 @@
 body {
   background: #ff7e5f; /* Fundo laranja sólido */
   font-family: 'Poppins', sans-serif;
+  color: white; /* Textos brancos */
 }
 .glass-card {
-  background: rgba(255, 255, 255, 0.9); /* Fundo branco mais opaco */
+  background: rgba(255, 255, 255, 0.1); /* Fundo transparente com leve destaque */
+  border: 2px solid rgba(255, 255, 255, 0.3); /* Borda branca sutil */
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+.glass-card h1 {
+  color: white; /* Título branco */
+}
+.glass-card p {
+  color: white; /* Parágrafos brancos */
+}
+.glass-card button {
+  background: #ff7e5f; /* Botão laranja */
+  border: 2px solid white; /* Borda branca no botão */
+  color: white; /* Texto do botão branco */
+}
+.glass-card button:hover {
+  background: #fe6b35; /* Laranja mais escuro no hover */
+}
 </style>
 </head>
-<body class="flex flex-col items-center justify-center h-screen text-white">
+<body class="flex flex-col items-center justify-center h-screen">
 <div class="glass-card flex flex-col items-center text-center">
   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsUPrE3UnAgck23EHyW1EYTvjcJaua0RqhDA&s" alt="Logo FRIJOB" class="w-32 mb-4">
   <h1 class="text-3xl font-bold mb-4">Leitor de QR Code</h1>
@@ -27,7 +43,7 @@ body {
     <video id="camera-video" class="w-full h-full" autoplay playsinline muted></video>
   </div>
   <p id="qr-result" class="mt-4 p-3 bg-white text-orange-700 rounded-lg shadow-lg">Aguardando leitura...</p>
-  <button id="start-scan" class="mt-4 px-4 py-2 bg-orange-600 text-white rounded-lg shadow-lg hover:bg-orange-700">Ativar Câmera</button>
+  <button id="start-scan" class="mt-4 px-4 py-2 rounded-lg shadow-lg">Ativar Câmera</button>
 </div>
 <script>
 const video = document.getElementById('camera-video');
