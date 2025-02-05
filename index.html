@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitor de QR Code - FRIJOB</title>
+    <script src="https://unpkg.com/qr-scanner/qr-scanner.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            font-family: 'Poppins', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center h-screen text-white">
+    <div class="glass-card flex flex-col items-center text-center">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsUPrE3UnAgck23EHyW1EYTvjcJaua0RqhDA&s" alt="Logo FRIJOB" class="w-32 mb-4">
+        <h1 class="text-3xl font-bold mb-4">Leitor de QR Code</h1>
+        
+        <div class="relative w-64 h-64 border-4 border-white rounded-lg overflow-hidden shadow-lg">
+            <video id="qr-video" class="w-full h-full" playsinline></video>
+        </div>
+        
+        <p id="qr-result" class="mt-4 p-3 bg-white text-orange-700 rounded-lg shadow-lg">Aguardando leitura...</p>
+        <button id="start-scan" class="mt-4 px-4 py-2 bg-orange-600 text-white rounded-lg shadow-lg hover:bg-orange-700">Ativar Câmera</button>
+    </div>
+    
+    <script>
+        const video = document.getElementById('qr-video');
+        const resultText = document.getElementById('qr-result');
+        const startScanBtn = document.getElementById('start-scan');
+        let qrScanner;
+
+        async function requestCameraPermission() {
+            try {
+                // Força a solicitação de permissão
+                await navigator.mediaDevices.getUserMedia({ video: true });
+            } catch (error) {
+                console.error("Permissão negada ou erro ao acessar a câmera:", error);
+                resultText.textContent = "Erro: Verifique as permissões da câmera no navegador.";
+            }
+        }
+
+        startScanBtn.addEventListener('click', async () => {
+            try {
+                await requestCameraPermission();
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                video.srcObject = stream;
+                qrScanner = new QrScanner(video, result => {
+                    resultText.textContent = `Código: ${result}`;
+                    qrScanner.stop();
+                });
+                qrScanner.start();
+            } catch (error) {
+                resultText.textContent = "Erro ao acessar a câmera. Verifique as permissões no navegador.";
+                console.error("Erro ao acessar a câmera:", error);
+            }
+        });
+    </script>
+</body>
+</html>
