@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            background: linear-gradient(135deg, #ff6f47, #ff9a5b);
             font-family: 'Poppins', sans-serif;
         }
         .glass-card {
@@ -53,12 +54,16 @@
             try {
                 await requestCameraPermission();
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-                video.srcObject = stream;
-                qrScanner = new QrScanner(video, result => {
-                    resultText.textContent = `Código: ${result}`;
-                    qrScanner.stop();
-                });
-                qrScanner.start();
+                if (stream) {
+                    video.srcObject = stream;
+                    qrScanner = new QrScanner(video, result => {
+                        resultText.textContent = `Código: ${result}`;
+                        qrScanner.stop();
+                    });
+                    qrScanner.start();
+                } else {
+                    resultText.textContent = "Erro ao acessar a câmera. Verifique as permissões no navegador.";
+                }
             } catch (error) {
                 resultText.textContent = "Erro ao acessar a câmera. Verifique as permissões no navegador.";
                 console.error("Erro ao acessar a câmera:", error);
@@ -67,3 +72,4 @@
     </script>
 </body>
 </html>
+```
