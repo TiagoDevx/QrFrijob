@@ -11,39 +11,59 @@ body {
   background: #ff7e5f; /* Fundo laranja sólido */
   font-family: 'Poppins', sans-serif;
   color: white; /* Textos brancos */
+  margin: 0;
+  padding: 0;
 }
 .glass-card {
   background: rgba(255, 255, 255, 0.1); /* Fundo transparente com leve destaque */
-  border: 2px solid rgba(255, 255, 255, 0.3); /* Borda branca sutil */
+  border: 2px solid rgba(255, 255, 255, 0.5); /* Borda branca sutil */
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 .glass-card h1 {
   color: white; /* Título branco */
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
 }
 .glass-card p {
   color: white; /* Parágrafos brancos */
+  font-size: 1rem;
+  margin-bottom: 1rem;
 }
 .glass-card button {
-  background: #ff7e5f; /* Botão laranja */
-  border: 2px solid white; /* Borda branca no botão */
+  background: #ff4d00; /* Botão laranja mais escuro */
+  border: none;
   color: white; /* Texto do botão branco */
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 .glass-card button:hover {
-  background: #fe6b35; /* Laranja mais escuro no hover */
+  background: #e64300; /* Laranja mais escuro no hover */
+}
+.glass-card #qr-result {
+  background: white; /* Fundo branco para o resultado */
+  color: #ff7e5f; /* Texto laranja */
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 1rem;
 }
 </style>
 </head>
 <body class="flex flex-col items-center justify-center h-screen">
-<div class="glass-card flex flex-col items-center text-center">
+<div class="glass-card flex flex-col items-center">
   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsUPrE3UnAgck23EHyW1EYTvjcJaua0RqhDA&s" alt="Logo FRIJOB" class="w-32 mb-4">
-  <h1 class="text-3xl font-bold mb-4">Leitor de QR Code</h1>
+  <h1>Leitor de QR Code</h1>
   <div class="relative w-64 h-64 border-4 border-white rounded-lg overflow-hidden shadow-lg">
     <video id="camera-video" class="w-full h-full" autoplay playsinline muted></video>
   </div>
-  <p id="qr-result" class="mt-4 p-3 bg-white text-orange-700 rounded-lg shadow-lg">Aguardando leitura...</p>
-  <button id="start-scan" class="mt-4 px-4 py-2 rounded-lg shadow-lg">Ativar Câmera</button>
+  <p id="qr-result">Aguardando leitura...</p>
+  <button id="start-scan">Ativar Câmera</button>
 </div>
 <script>
 const video = document.getElementById('camera-video');
