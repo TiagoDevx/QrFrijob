@@ -8,7 +8,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body {
-  background: #ef790c; /* Fundo laranja sólido */
+  background: #ff8400; /* Fundo laranja (#ff8400) */
   font-family: 'Poppins', sans-serif;
   color: white; /* Textos brancos */
   margin: 0;
@@ -47,17 +47,31 @@ body {
 }
 .glass-card #qr-result {
   background: white; /* Fundo branco para o resultado */
-  color: #ff7e5f; /* Texto laranja */
+  color: #ff8400; /* Texto laranja (#ff8400) */
   padding: 10px;
   border-radius: 8px;
   font-size: 1rem;
   margin-top: 1rem;
 }
+.item-container {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 15px;
+  padding: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+.item-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
 </style>
 </head>
 <body class="flex flex-col items-center justify-center h-screen">
 <div class="glass-card flex flex-col items-center">
-  <img src=" https://scontent.fcgh14-1.fna.fbcdn.net/v/t39.30808-6/292605664_178599784570474_32803013769717090_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGt61KG4WEnJBLy62RPq3IwnCNQ2Lbeb96cI1DYtt5v3oqklYe3xbg5uRgdec6MgVn2ey2-klaIVBQTZZbtmhb2&_nc_ohc=0Nw1jiTtxHkQ7kNvgEpLUmV&_nc_zt=23&_nc_ht=scontent.fcgh14-1.fna&_nc_gid=A1kbouRuXvkcTQob2qSFbcm&oh=00_AYAgsg0Csv1rhXnsqPB1wwUb1A1shtblDi6Rhfx8a-8Dzg&oe=67A9821A" alt="Logo FRIJOB" class="w-32 mb-4">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsUPrE3UnAgck23EHyW1EYTvjcJaua0RqhDA&s" alt="Logo FRIJOB" class="w-32 mb-4">
   <h1>Leitor de QR Code</h1>
   <div class="relative w-64 h-64 border-4 border-white rounded-lg overflow-hidden shadow-lg">
     <video id="camera-video" class="w-full h-full" autoplay playsinline muted></video>
@@ -65,10 +79,46 @@ body {
   <p id="qr-result">Aguardando leitura...</p>
   <button id="start-scan">Ativar Câmera</button>
 </div>
+
+<!-- Nova tela para exibir os detalhes -->
+<div id="item-details" class="hidden glass-card item-container">
+  <img id="item-image" class="item-image" alt="Imagem do Item">
+  <h1 id="item-name"></h1>
+  <p id="item-description"></p>
+  <button id="back-button" class="mt-4 px-4 py-2 bg-orange-600 text-white rounded-lg shadow-lg hover:bg-orange-700">Voltar</button>
+</div>
+
 <script>
+// Dados dos itens (simulando um "banco de dados")
+const database = [
+  {
+    qr_code_key: "123",
+    name: "Item 1",
+    description: "Descrição do Item 1",
+    image_url: "https://via.placeholder.com/150"
+  },
+  {
+    qr_code_key: "456",
+    name: "Item 2",
+    description: "Descrição do Item 2",
+    image_url: "https://via.placeholder.com/150"
+  },
+  {
+    qr_code_key: "789",
+    name: "Item 3",
+    description: "Descrição do Item 3",
+    image_url: "https://via.placeholder.com/150"
+  }
+];
+
 const video = document.getElementById('camera-video');
 const resultText = document.getElementById('qr-result');
 const startScanBtn = document.getElementById('start-scan');
+const itemDetails = document.getElementById('item-details');
+const itemName = document.getElementById('item-name');
+const itemDescription = document.getElementById('item-description');
+const itemImage = document.getElementById('item-image');
+const backButton = document.getElementById('back-button');
 let cameraStream;
 
 // Função para iniciar a câmera
@@ -105,13 +155,15 @@ function detectQRCode() {
 
       if (qrCode) {
         console.log("QR Code detectado:", qrCode.data);
-        resultText.textContent = `Código: ${qrCode.data}`;
 
-        // Verifica se o QR Code contém um link válido
-        if (qrCode.data.startsWith("http://") || qrCode.data.startsWith("https://")) {
-          window.location.href = qrCode.data; // Redireciona para o link
+        // Procurar o item no "banco de dados"
+        const item = database.find(i => i.qr_code_key === qrCode.data);
+
+        if (item) {
+          // Exibir os detalhes do item
+          showItemDetails(item);
         } else {
-          resultText.textContent = "QR Code inválido ou não é um link.";
+          resultText.textContent = "Item não encontrado.";
         }
 
         stopCamera(); // Para a câmera após a leitura
@@ -124,6 +176,33 @@ function detectQRCode() {
 
   tick();
 }
+
+// Função para exibir os detalhes do item
+function showItemDetails(item) {
+  // Preencher os dados na tela de detalhes
+  itemName.textContent = item.name;
+  itemDescription.textContent = item.description;
+  itemImage.src = item.image_url;
+
+  // Esconder o leitor de QR Code e mostrar a tela de detalhes
+  document.querySelector('.glass-card').classList.add('hidden');
+  itemDetails.classList.remove('hidden');
+}
+
+// Função para voltar ao leitor de QR Code
+backButton.addEventListener('click', () => {
+  // Limpar os dados da tela de detalhes
+  itemName.textContent = "";
+  itemDescription.textContent = "";
+  itemImage.src = "";
+
+  // Mostrar o leitor de QR Code e esconder a tela de detalhes
+  document.querySelector('.glass-card').classList.remove('hidden');
+  itemDetails.classList.add('hidden');
+
+  // Reiniciar a câmera
+  startCamera();
+});
 
 // Função para parar a câmera
 function stopCamera() {
