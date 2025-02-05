@@ -36,27 +36,36 @@ const resultText = document.getElementById('qr-result');
 const startScanBtn = document.getElementById('start-scan');
 let qrScanner;
 
-// Função para iniciar o scanner de QR Code
-async function startQrScanner() {
+// Função para iniciar a câmera e o scanner
+async function startCameraAndScanner() {
   try {
+    // Solicita acesso à câmera
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+    video.srcObject = stream;
+
+    console.log("Câmera ativada com sucesso!");
+
     // Inicializa o QrScanner
     qrScanner = new QrScanner(video, result => {
+      console.log("QR Code detectado:", result);
       resultText.textContent = `Código: ${result}`;
       qrScanner.stop(); // Para o scanner após a leitura
     });
 
     // Inicia o scanner
     await qrScanner.start();
+    console.log("Scanner iniciado!");
     resultText.textContent = "Escaneando QR Code...";
   } catch (error) {
-    console.error("Erro ao iniciar o scanner:", error);
-    resultText.textContent = "Erro: Não foi possível iniciar o scanner.";
+    console.error("Erro ao acessar a câmera ou iniciar o scanner:", error);
+    resultText.textContent = "Erro: Não foi possível acessar a câmera ou iniciar o scanner.";
   }
 }
 
 // Evento de clique no botão "Ativar Câmera"
 startScanBtn.addEventListener('click', () => {
-  startQrScanner();
+  console.log("Botão 'Ativar Câmera' clicado.");
+  startCameraAndScanner();
 });
 </script>
 </body>
